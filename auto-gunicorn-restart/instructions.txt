@@ -5,6 +5,18 @@ This automation watches a Django project directory for changes to Python files.
 When a file is saved, it automatically restarts the Gunicorn service.
 The watcher is installed as a systemd service so it runs in the background, persists through logouts, and survives server reboots.
 
+# DISCLAIMER
+This automation is provided as-is.
+It grants the configured user passwordless sudo access to restart Gunicorn
+and will automatically restart the service whenever Python files are saved
+in the watched directory.
+
+Use with caution in production environments:
+- Do not change the sudoers line to something broader than the exact Gunicorn restart command.
+- Keep the watcher script owned by your user and not world-writable.
+- Be aware that frequent file saves (e.g. migrations, git pulls) may cause repeated restarts.
+- Test on a staging VPS before deploying to a client system.
+
 ---
 
 ## Setup Instructions
