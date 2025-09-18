@@ -1,0 +1,42 @@
+# Django Watcher Setup (with Gunicorn Restart)
+
+## Description
+This automation watches a Django project directory for changes to Python files.
+When a file is saved, it automatically restarts the Gunicorn service.
+The watcher is installed as a systemd service so it runs in the background, persists through logouts, and survives server reboots.
+
+---
+
+## Setup Instructions
+
+1. Install dependencies:
+   sudo apt update && sudo apt install -y inotify-tools
+
+2. Give user sudo permission to restart Gunicorn:
+   sudo visudo
+   # Add this line at the end:
+   youruser ALL=(ALL) NOPASSWD: /bin/systemctl restart gunicorn
+
+3. Create the systemd service:
+   sudo nano /etc/systemd/system/watcher.service
+
+   # Paste this:
+   [Unit]
+   Description=Inotify Watcher for Django Projects
+   After=network.target
+
+   [Service]
+   User=youruser
+   ExecStart=/home/youruser/watcher.sh
+   Restart=always
+
+   [Install]
+   WantedBy=multi-user.target
+
+4. Enable and start the service:
+   sudo systemctl daemon-reload
+   sudo systemctl enable watcher.service
+   sudo systemctl start watcher.service
+
+5. View logs:
+   journalctl -u watcher.service -f
