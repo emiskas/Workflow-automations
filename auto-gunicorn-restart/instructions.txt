@@ -1,38 +1,37 @@
-# Django Watcher Setup (with Gunicorn Restart)
+========================================
+Django Watcher Setup (with Gunicorn Restart)
+========================================
 
-## Description
 This automation watches a Django project directory for changes to Python files.
-When a file is saved, it automatically restarts the Gunicorn service.
-The watcher is installed as a systemd service so it runs in the background, persists through logouts, and survives server reboots.
+When a file changes, it automatically restarts the Gunicorn service.
+Installed as a systemd service, it runs in the background, persists through logouts,
+and survives reboots.
 
-# DISCLAIMER
-This automation is provided as-is.
-It grants the configured user passwordless sudo access to restart Gunicorn
-and will automatically restart the service whenever Python files are saved
-in the watched directory.
+----------------------------------------
+DISCLAIMER
+----------------------------------------
+- Grants the configured user passwordless sudo access to restart Gunicorn.
+- Will restart Gunicorn whenever a Python file is saved in the watched directory.
+- Do not broaden the sudoers entry beyond the exact Gunicorn restart command.
+- Keep the watcher script owned by your user (not world-writable).
+- Frequent file changes (e.g. migrations, git pulls) will trigger repeated restarts.
+- Test on staging before deploying to production.
 
-Use with caution in production environments:
-- Do not change the sudoers line to something broader than the exact Gunicorn restart command.
-- Keep the watcher script owned by your user and not world-writable.
-- Be aware that frequent file saves (e.g. migrations, git pulls) may cause repeated restarts.
-- Test on a staging VPS before deploying to a client system.
-
----
-
-## Setup Instructions
-
+----------------------------------------
+SETUP
+----------------------------------------
 1. Install dependencies:
    sudo apt update && sudo apt install -y inotify-tools
 
-2. Give user sudo permission to restart Gunicorn:
+2. Allow user to restart Gunicorn without password:
    sudo visudo
-   # Add this line at the end:
+   # Add this line:
    youruser ALL=(ALL) NOPASSWD: /bin/systemctl restart gunicorn
 
 3. Create the systemd service:
    sudo nano /etc/systemd/system/watcher.service
 
-   # Paste this:
+   # Paste this block:
    [Unit]
    Description=Inotify Watcher for Django Projects
    After=network.target
@@ -52,3 +51,7 @@ Use with caution in production environments:
 
 5. View logs:
    journalctl -u watcher.service -f
+
+----------------------------------------
+END
+----------------------------------------

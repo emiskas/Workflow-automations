@@ -1,30 +1,42 @@
+========================================
 Auto Virtualenv Activation (Project Root Only)
-----------------------------------------------
+========================================
 
-Description:
 This script overrides the default `cd` command in Bash to automatically
 create and/or activate a Python virtual environment (`.venv`) when
-entering the root directory of a Django project (identified by `manage.py`).
+you enter the root directory of a Django project (identified by `manage.py`).
 
-Features:
-- Detects if you're at the root of a Django project.
-- Creates a `.venv` if none exists.
+----------------------------------------
+FEATURES
+----------------------------------------
+- Detects if you’re in a Django project root.
+- Creates `.venv` if missing.
 - Automatically activates `.venv` if it exists.
-- Silent in all other directories (no unnecessary activations).
+- Stays quiet in all other directories.
 
-Instructions:
-1. Copy the script into the VPS user’s home directory, e.g. ~/auto_venv.sh
+----------------------------------------
+SETUP
+----------------------------------------
+1. Copy the script into the VPS user’s home directory:
+   scp auto_venv.sh user@your-vps:/home/user/
 
-2. Open (or create) the Bash configuration file:
+2. Edit your Bash config file:
    nano ~/.bashrc
 
-3. Source the script by adding this line at the end of ~/.bashrc:
+3. Add this line at the end of `~/.bashrc`:
    source ~/auto_venv.sh
 
-4. Reload the Bash configuration to apply changes immediately:
+4. Reload the Bash config to apply changes immediately:
    source ~/.bashrc
 
-Usage:
-- Simply `cd` into a Django project root (directory containing `manage.py`).
-- `.venv` will be created if missing, and automatically activated.
-- Subsequent logins or `cd` actions will re-activate it automatically.
+----------------------------------------
+USAGE
+----------------------------------------
+- Just `cd` into a Django project root (a directory with `manage.py`).
+- A `.venv` will be created automatically if it doesn’t exist.
+- If it exists, it will be activated every time you enter that directory.
+- Works on new logins and all future `cd` commands.
+
+----------------------------------------
+END
+----------------------------------------

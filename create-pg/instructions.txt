@@ -1,0 +1,62 @@
+========================================
+PostgreSQL Database & User Setup Script
+========================================
+
+This script automates the creation of a PostgreSQL database and user for Django deployments on a fresh VPS.
+
+----------------------------------------
+USAGE
+----------------------------------------
+1. Upload the script to your VPS:
+   scp create_pg.sh user@your-vps:/home/user/
+
+2. SSH into the VPS:
+   ssh user@your-vps
+
+3. Make the script executable:
+   chmod +x create_pg.sh
+
+4. Run the script with arguments:
+   ./create_pg.sh <db_name> <db_user> <db_password>
+
+   Example:
+   ./create_pg.sh mydb myuser mysecurepassword
+
+----------------------------------------
+WHAT IT DOES
+----------------------------------------
+- Installs PostgreSQL (if not already installed).
+- Creates a PostgreSQL role (user) with the provided username and password.
+- Creates a new database owned by that user.
+- Grants the user all privileges on the new database.
+
+----------------------------------------
+NOTES
+----------------------------------------
+- Must be run as a user with sudo privileges.
+- The script will use the 'postgres' superuser internally to create roles and databases.
+- If the user already exists, it will skip creating them.
+- Passwords should be strong (don’t use "mypassword123" unless you want to get owned).
+- Run this before configuring your Django project so you can copy the credentials directly.
+
+----------------------------------------
+Django DATABASES config example
+----------------------------------------
+After running the script, add this to your Django settings:
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '<db_name>',
+        'USER': '<db_user>',
+        'PASSWORD': '<db_password>',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
+Replace <db_name>, <db_user>, and <db_password> with the values you passed to the script.
+
+----------------------------------------
+END
+----------------------------------------
