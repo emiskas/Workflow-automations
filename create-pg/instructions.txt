@@ -7,16 +7,18 @@ This script automates the creation of a PostgreSQL database and user for Django 
 ----------------------------------------
 USAGE
 ----------------------------------------
-1. Upload the script to your VPS:
+1. Open the terminal from the directory of this instructions file.
+
+2. Upload the script to your VPS:
    scp create_pg.sh user@your-vps:/home/user/
 
-2. SSH into the VPS:
+3. SSH into the VPS:
    ssh user@your-vps
 
-3. Make the script executable:
+4. Make the script executable:
    chmod +x create_pg.sh
 
-4. Run the script with arguments:
+5. Run the script with arguments:
    ./create_pg.sh <db_name> <db_user> <db_password>
 
    Example:
