@@ -17,16 +17,18 @@ FEATURES
 ----------------------------------------
 SETUP
 ----------------------------------------
-1. Copy the script into the VPS user’s home directory:
+1. Open the terminal from the directory of this instructions file.
+
+2. Copy the script into the VPS user’s home directory:
    scp auto_venv.sh user@your-vps:/home/user/
 
-2. Edit your Bash config file:
+3. Edit your Bash config file:
    nano ~/.bashrc
 
-3. Add this line at the end of `~/.bashrc`:
+4. Add this line at the end of `~/.bashrc`:
    source ~/auto_venv.sh
 
-4. Reload the Bash config to apply changes immediately:
+5. Reload the Bash config to apply changes immediately:
    source ~/.bashrc
 
 ----------------------------------------
