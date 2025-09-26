@@ -19,7 +19,7 @@ SETUP
 ----------------------------------------
 1. Open the terminal from the directory of this instructions file.
 
-2. Copy the script into the VPS user’s home directory:
+2. Upload the script into the VPS user’s home directory:
    scp auto_venv.sh user@your-vps:/home/user/
 
 3. Edit your Bash config file:
