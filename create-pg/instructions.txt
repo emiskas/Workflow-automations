@@ -5,6 +5,17 @@ PostgreSQL Database & User Setup Script
 This script automates the creation of a PostgreSQL database and user for Django deployments on a fresh VPS.
 
 ----------------------------------------
+DISCLAIMER
+----------------------------------------
+- This script must be run as a user with sudo privileges.
+- It creates a new PostgreSQL role and database with full privileges.
+- Schema ownership is reassigned so Django can create and manage tables.
+- Use only for application databases, not for shared production clusters.
+- If rerun, the script will fail unless the database/user are dropped first.
+- Passwords are stored in plain text at runtime. Do not reuse production credentials here.
+- Test thoroughly on staging before trusting this for client deployments.
+
+----------------------------------------
 USAGE
 ----------------------------------------
 1. Open the terminal from the directory of this instructions file.
