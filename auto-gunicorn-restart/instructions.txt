@@ -16,6 +16,7 @@ DISCLAIMER
 - Keep the watcher script owned by your user (not world-writable).
 - Frequent file changes (e.g. migrations, git pulls) will trigger repeated restarts.
 - Test on staging before deploying to production.
+- Enable the watcher only during development. For production updates, stop the watcher and restart Gunicorn manually to avoid downtime or unexpected restarts.
 
 ----------------------------------------
 SETUP
