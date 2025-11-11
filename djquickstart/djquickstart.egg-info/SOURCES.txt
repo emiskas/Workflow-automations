@@ -1,0 +1,10 @@
+pyproject.toml
+djquickstart/__init__.py
+djquickstart/cli.py
+djquickstart.egg-info/PKG-INFO
+djquickstart.egg-info/SOURCES.txt
+djquickstart.egg-info/dependency_links.txt
+djquickstart.egg-info/entry_points.txt
+djquickstart.egg-info/requires.txt
+djquickstart.egg-info/top_level.txt
+djquickstart/presets/base/settings.py
