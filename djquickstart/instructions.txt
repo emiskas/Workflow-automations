@@ -19,7 +19,7 @@ DISCLAIMER
 USAGE
 ----------------------------------------
 
-1. Install the tool in editable mode (once per machine):
+1. (INSIDE THE ROOT djquickstart) Install the tool in editable mode (once per machine):
    pip install -e .
 
 2. Confirm installation worked:
