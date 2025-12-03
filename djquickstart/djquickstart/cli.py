@@ -1,10 +1,10 @@
+import re
 import shutil
 import subprocess
 from pathlib import Path
 
 import click
 from django.core.management.utils import get_random_secret_key
-
 
 BASE_DIR = Path(__file__).resolve().parent
 PRESETS_DIR = BASE_DIR / "presets"
@@ -29,6 +29,25 @@ def add_app_to_settings(settings_path: Path, app_name: str):
     settings_path.write_text(new_content)
 
 
+def fix_project_references(settings_path: Path, safe_project_name: str):
+    """Fix ROOT_URLCONF and WSGI_APPLICATION to match the new project name."""
+    text = settings_path.read_text()
+
+    text = re.sub(
+        r'ROOT_URLCONF\s*=\s*["\'].*?["\']',
+        f'ROOT_URLCONF = "{safe_project_name}.urls"',
+        text,
+    )
+
+    text = re.sub(
+        r'WSGI_APPLICATION\s*=\s*["\'].*?["\']',
+        f'WSGI_APPLICATION = "{safe_project_name}.wsgi.application"',
+        text,
+    )
+
+    settings_path.write_text(text)
+
+
 @click.group()
 def cli():
     pass
@@ -48,6 +67,10 @@ def project(project_name, app_name, preset, install):
         click.echo(f"Preset '{preset}' not found.")
         raise SystemExit(1)
 
+    # Clean names for Python imports
+    safe_project_name = project_name.replace("-", "_")
+    safe_app_name = app_name.replace("-", "_")
+
     # 1. Determine where the project will live
     project_root = Path.cwd() / project_name
 
@@ -59,29 +82,32 @@ def project(project_name, app_name, preset, install):
 
     # 2. Run django-admin inside that directory (flat layout)
     subprocess.run(
-        ["django-admin", "startproject", project_name, "."],
+        ["django-admin", "startproject", safe_project_name, "."],
         check=True,
         cwd=project_root,
     )
 
-    inner_project_path = project_root / project_name  # e.g. mysite/mysite/
+    inner_project_path = project_root / safe_project_name
 
     # 3. Copy custom preset settings.py INTO the inner project folder (if provided)
     src_settings = preset_path / "settings.py"
-    if src_settings.exists():
-        shutil.copy(src_settings, inner_project_path / "settings.py")
-
     target_settings = inner_project_path / "settings.py"
+
+    if src_settings.exists():
+        shutil.copy(src_settings, target_settings)
+
+        # Fix project references inside the preset settings
+        fix_project_references(target_settings, safe_project_name)
 
     # 4. Create the app inside the project
     subprocess.run(
-        ["python", "manage.py", "startapp", app_name],
+        ["python", "manage.py", "startapp", safe_app_name],
         check=True,
         cwd=project_root,
     )
 
     # 5. Now safely add app to INSTALLED_APPS
-    add_app_to_settings(target_settings, app_name)
+    add_app_to_settings(target_settings, safe_app_name)
 
     # 6. Copy remaining preset files (requirements.txt only)
     ALLOWED_PRESET_FILES = {"requirements.txt"}
@@ -90,7 +116,7 @@ def project(project_name, app_name, preset, install):
             continue
         shutil.copy(file, project_root / file.name)
 
-    # 7. Handle .env.template → .env with SECRET_KEY (no template mess inside project)
+    # 7. Handle .env.template → .env with SECRET_KEY
     template_env = preset_path / ".env.template"
     env_path = project_root / ".env"
 

@@ -8,3 +8,4 @@ djquickstart.egg-info/entry_points.txt
 djquickstart.egg-info/requires.txt
 djquickstart.egg-info/top_level.txt
 djquickstart/presets/base/settings.py
+djquickstart/presets/demo/settings.py
